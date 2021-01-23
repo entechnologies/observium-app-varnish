@@ -1,2 +1,2 @@
 # varnishstat-agent
-Agent for varnishstat 6
+Agent for varnishstat 6.2
