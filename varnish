@@ -1,0 +1,72 @@
+#!/usr/bin/env perl
+
+# FIXME:
+# varnish.inc.php need to update rrd fields to reflect newer statistics
+
+use XML::Simple;
+use Data::Dumper;
+
+die unless $stat = `/usr/bin/varnishstat -x`;
+
+# create object
+$xml = new XML::Simple();
+
+# read XML file
+$data = $xml->XMLin($stat);
+#print Dumper($data);
+
+print "<<<app-varnish>>>\n";
+
+
+######################
+### Backend Statistics
+
+# backend_conn / Backend conn. requests
+print "$data->{stat}->{'MAIN.client_req'}->{value};";
+
+# backend_unhealthy / Backend conn. not attempted
+print "$data->{stat}->{'MAIN.backend_unhealthy'}->{value};";
+
+# backend_busy / Backend conn. too many
+print "$data->{stat}->{'MAIN.backend_busy'}->{value};";
+
+# backend_fail / Backend conn. failures
+print "$data->{stat}->{'MAIN.backend_fail'}->{value};";
+
+# backend_reuse / Backend conn. reuses
+print "$data->{stat}->{'MAIN.backend_reuse'}->{value};";
+
+# backend_toolate / Backend conn. was closed
+print "$data->{stat}->{'backend_toolate'}->{value};";
+
+# backend_recycle / Backend conn. recycles
+print "$data->{stat}->{'MAIN.backend_recycle'}->{value};";
+
+# backend_retry / Backend conn. retry
+print "$data->{stat}->{'MAIN.backend_retry'}->{value};";
+
+
+####################
+### Cache Statistics
+
+# cache_hitpass / Cache hits for pass
+print "$data->{stat}->{'MAIN.cache_hitpass'}->{value};";
+
+# cache_hit / Cache hits
+print "$data->{stat}->{'MAIN.cache_hit'}->{value};";
+
+# cache_miss / Cache misses
+print "$data->{stat}->{'MAIN.cache_miss'}->{value};";
+
+
+##################
+### LRU Statistics
+
+# n_lru_nuked / N LRU nuked objects
+print "$data->{stat}->{'MAIN.n_lru_nuked'}->{value};";
+
+# n_lru_moved / N LRU moved objects
+print "$data->{stat}->{'MAIN.n_lru_moved'}->{value};";
+
+
+#EOF
